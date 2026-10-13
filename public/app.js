@@ -22,8 +22,8 @@ function incomeGroup(row){
 function signedValue(row){const amount=Math.abs(valueOf(row.plannedValue));return income(row)?amount:-amount}
 function isSettled(row){return Boolean(row.paidDate)||/\b(paga|pago|recebida|recebido)\b/.test(String(row.status||"").toLocaleLowerCase("pt-BR"))}
 function totals(items){
-  const result={income:0,expense:0,realized:0};
-  for(const row of items){if(income(row))result.income+=Math.abs(valueOf(row.plannedValue));else result.expense+=Math.abs(valueOf(row.plannedValue));if(isSettled(row))result.realized+=signedValue(row)}
+  const result={income:0,expense:0};
+  for(const row of items){if(income(row))result.income+=Math.abs(valueOf(row.plannedValue));else result.expense+=Math.abs(valueOf(row.plannedValue))}
   result.balance=items.reduce((sum,row)=>sum+signedValue(row),0);
   return result;
 }
@@ -49,7 +49,6 @@ function renderSummary(items){
   byId("incomeTotal").textContent=currency.format(result.income);
   byId("expenseTotal").textContent=currency.format(result.expense);
   byId("balanceTotal").textContent=currency.format(result.balance);
-  byId("realizedTotal").textContent=currency.format(result.realized);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
   byId("salaryHint").textContent=period;
