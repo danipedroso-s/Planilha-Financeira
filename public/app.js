@@ -312,7 +312,9 @@ async function loadFinance(forceRefresh=false){
   const button=byId("refreshButton"),status=byId("refreshStatus");
   if(forceRefresh){button.disabled=true;status.textContent="Atualizando…"}
   try{
-    const response=await fetch(forceRefresh?"/api/finance?refresh=1":"/api/finance",{cache:"no-store",headers:{Accept:"application/json"}});
+    const endpoint=new URL("/api/finance",window.location.origin);
+    if(forceRefresh){endpoint.searchParams.set("refresh","1");endpoint.searchParams.set("_",String(Date.now()))}
+    const response=await fetch(endpoint,{cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache, no-store","Pragma":"no-cache"}});
     const result=await response.json();
     if(!response.ok)throw new Error(result.error||"Não foi possível carregar a base.");
     const refreshedRows=result.rows||[];
