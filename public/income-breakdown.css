@@ -19,5 +19,6 @@
 .kpi-expense .kpi-split-breakdown strong{color:#96574d}
 .kpi-balance .kpi-split-breakdown strong{color:var(--green)}
 .kpi-balance .kpi-split-breakdown strong.is-negative,.kpi-balance>strong.is-negative{color:#bd3d3a}
-.kpi-split-note{color:#899590;font-size:9px!important}
+.kpi-split-note{color:#899590;font-size:9px!important;line-height:1.35;white-space:normal}
+.kpi-split-note[hidden]{display:none}
 .transactions-panel{margin-bottom:17px}

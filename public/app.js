@@ -36,10 +36,10 @@ function datePeriod(items){
   for(const row of items){const day=dueDay(row);if(day>=1&&day<=14)first.push(row);else if(day>=15&&day<=31)second.push(row);else missing.push(row)}
   return{first,second,missing};
 }
-function updateSplitNote(id,missing){
+function updateSplitNote(id,missing,amount){
   const note=byId(id);
   note.hidden=missing.length===0;
-  note.textContent=missing.length?integer.format(missing.length)+(missing.length===1?" lançamento sem vencimento, incluído apenas no total.":" lançamentos sem vencimento, incluídos apenas no total."):"";
+  note.textContent=missing.length?"Sem vencimento: "+currency.format(amount)+" em "+integer.format(missing.length)+(missing.length===1?" lançamento; incluído no total.":" lançamentos; incluídos no total."):"";
 }
 function selectedRows(){
   const month=byId("monthFilter").value;
@@ -72,8 +72,9 @@ function renderSummary(items){
   const firstBalanceValue=byId("balanceFirstHalf"),secondBalanceValue=byId("balanceSecondHalf");
   firstBalanceValue.textContent=currency.format(firstBalance);firstBalanceValue.classList.toggle("is-negative",firstBalance<0);
   secondBalanceValue.textContent=currency.format(secondBalance);secondBalanceValue.classList.toggle("is-negative",secondBalance<0);
-  updateSplitNote("expenseSplitNote",periods.missing.filter((row)=>!income(row)));
-  updateSplitNote("balanceSplitNote",periods.missing);
+  const missingExpenses=periods.missing.filter((row)=>!income(row));
+  updateSplitNote("expenseSplitNote",missingExpenses,sumPlanned(missingExpenses));
+  updateSplitNote("balanceSplitNote",periods.missing,totals(periods.missing).balance);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
   byId("expenseHint").textContent=period;
