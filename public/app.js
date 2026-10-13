@@ -21,6 +21,11 @@ function incomeGroup(row){
 }
 function signedValue(row){const amount=Math.abs(valueOf(row.plannedValue));return income(row)?amount:-amount}
 function isSettled(row){return Boolean(row.paidDate)||/\b(paga|pago|recebida|recebido)\b/.test(String(row.status||"").toLocaleLowerCase("pt-BR"))}
+function isOverdueExpense(row){
+  if(income(row)||isSettled(row))return false;
+  const dueDate=String(row.dueDate||""),validDue=/^\d{4}-\d{2}-\d{2}$/.test(dueDate),today=new Date(),todayLocal=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-"),status=String(row.status||"").toLocaleLowerCase("pt-BR");
+  return(validDue&&dueDate<todayLocal)||status.includes("atras")||status.includes("vencid");
+}
 function totals(items){
   const result={income:0,expense:0};
   for(const row of items){if(income(row))result.income+=Math.abs(valueOf(row.plannedValue));else result.expense+=Math.abs(valueOf(row.plannedValue))}
@@ -86,6 +91,7 @@ function renderSummary(items){
   byId("otherIncomeTotal").textContent=currency.format(incomeByGroup.other);
   byId("incomeTotal").textContent=currency.format(result.income);
   byId("expenseTotal").textContent=currency.format(result.expense);
+  byId("expenseOverdueTotal").textContent=currency.format(sumPlanned(expenses.filter(isOverdueExpense)));
   const balanceTotal=byId("balanceTotal");
   balanceTotal.textContent=currency.format(result.balance);
   balanceTotal.classList.toggle("is-negative",result.balance<0);

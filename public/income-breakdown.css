@@ -20,6 +20,9 @@
 .panel-toggle:focus-visible{outline:2px solid #187c68;outline-offset:2px}
 @media(max-width:700px){.transaction-heading-actions{gap:8px}.panel-toggle{padding:7px 8px}}
 .kpi-split-card{min-height:170px}
+.expense-overdue-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;padding:8px 10px;border-radius:9px;background:#fff3f1}
+.expense-overdue-row span{color:#a44d46;font-size:10px;font-weight:600}
+.expense-overdue-row strong{margin:0;color:#bd3d3a;font-size:12px;white-space:nowrap}
 .kpi-split-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid #edf0ee}
 .kpi-split-breakdown div{display:grid;gap:4px;min-width:0}
 .kpi-split-breakdown span{color:#899590;font-size:10px}
