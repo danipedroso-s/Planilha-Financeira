@@ -37,7 +37,25 @@
                 <div><span>Aluguel</span><strong id="rentTotal">—</strong></div>
                 <div><span>Outras</span><strong id="otherIncomeTotal">—</strong></div>
               </div>
+              <div class="income-period-breakdown" aria-label="Receitas recebidas e previstas por quinzena">
+                <section class="income-period-card" aria-label="Receitas dos dias 1 a 14">
+                  <span class="income-period-title">Dias 1–14</span>
+                  <div class="income-period-values">
+                    <p><span>Recebido</span><strong id="incomeReceivedFirst">—</strong></p>
+                    <p><span>Previsto</span><strong id="incomeForecastFirst">—</strong></p>
+                  </div>
+                </section>
+                <section class="income-period-card" aria-label="Receitas dos dias 15 a 31">
+                  <span class="income-period-title">Dias 15–31</span>
+                  <div class="income-period-values">
+                    <p><span>Recebido</span><strong id="incomeReceivedSecond">—</strong></p>
+                    <p><span>Previsto</span><strong id="incomeForecastSecond">—</strong></p>
+                  </div>
+                </section>
+              </div>
               <small id="incomeHint">No período selecionado</small>
+              <small class="income-data-note">Recebido considera lançamentos marcados como pagos/recebidos na planilha, pelo valor planejado.</small>
+              <small id="incomeSplitNote" class="kpi-split-note" hidden></small>
             </article>
             <article class="kpi-card kpi-expense kpi-split-card">
               <div class="kpi-heading"><span>Despesas previstas</span><span class="kpi-dot">↘</span></div>

@@ -41,6 +41,11 @@ function updateSplitNote(id,missing,amount){
   note.hidden=missing.length===0;
   note.textContent=missing.length?"Sem vencimento: "+currency.format(amount)+" em "+integer.format(missing.length)+(missing.length===1?" lançamento; incluído no total.":" lançamentos; incluídos no total."):"";
 }
+function updateIncomeSplitNote(missing){
+  const note=byId("incomeSplitNote");
+  note.hidden=missing.length===0;
+  note.textContent=missing.length?"Sem vencimento: "+currency.format(sumPlanned(missing))+" em "+integer.format(missing.length)+(missing.length===1?" receita; incluída no total.":" receitas; incluídas no total."):"";
+}
 function selectedRows(){
   const month=byId("monthFilter").value;
   return rows.filter((row)=>row.year===Number(selectedYear)&&(month==="Todos"||row.month===month));
@@ -66,6 +71,12 @@ function renderSummary(items){
   balanceTotal.textContent=currency.format(result.balance);
   balanceTotal.classList.toggle("is-negative",result.balance<0);
   const periods=datePeriod(items),firstExpenses=periods.first.filter((row)=>!income(row)),secondExpenses=periods.second.filter((row)=>!income(row));
+  const firstIncomes=periods.first.filter(income),secondIncomes=periods.second.filter(income),missingIncomes=periods.missing.filter(income);
+  byId("incomeReceivedFirst").textContent=currency.format(sumPlanned(firstIncomes.filter(isSettled)));
+  byId("incomeForecastFirst").textContent=currency.format(sumPlanned(firstIncomes.filter((row)=>!isSettled(row))));
+  byId("incomeReceivedSecond").textContent=currency.format(sumPlanned(secondIncomes.filter(isSettled)));
+  byId("incomeForecastSecond").textContent=currency.format(sumPlanned(secondIncomes.filter((row)=>!isSettled(row))));
+  updateIncomeSplitNote(missingIncomes);
   byId("expenseFirstHalf").textContent=currency.format(sumPlanned(firstExpenses));
   byId("expenseSecondHalf").textContent=currency.format(sumPlanned(secondExpenses));
   const firstBalance=totals(periods.first).balance,secondBalance=totals(periods.second).balance;

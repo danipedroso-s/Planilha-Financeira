@@ -1,11 +1,19 @@
 .kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .kpi-income-breakdown-card{min-height:170px}
+.income-period-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.income-period-card{min-width:0;padding:10px 11px;border:1px solid #edf0ee;border-radius:10px;background:#fbfcfb}
+.income-period-title{display:block;margin-bottom:5px;color:#64716f;font-size:10px;font-weight:700}
+.income-period-values{display:grid;gap:3px}
+.income-period-values p{display:flex;justify-content:space-between;align-items:baseline;gap:5px;margin:0}
+.income-period-values p span{color:#899590;font-size:9px}
+.income-period-values p strong{display:block;margin:0;color:#35524a;font-size:clamp(9px,.9vw,11px);letter-spacing:-.02em;white-space:nowrap}
 .income-breakdown{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid #edf0ee}
 .income-breakdown div{display:grid;gap:4px;min-width:0}
 .income-breakdown span{color:#899590;font-size:10px}
 .income-breakdown strong{display:block;margin:0;color:#35524a;font-size:clamp(10px,1.05vw,13px);letter-spacing:-.02em;white-space:nowrap}
 .income-breakdown-card>small{margin-top:9px}
-@media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.income-data-note{color:#899590;font-size:9px!important;line-height:1.35;white-space:normal}
+@media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi-income-breakdown-card{grid-column:1/-1}}
 .transaction-heading-actions{display:flex;align-items:center;gap:12px}
 .panel-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid #e4eae7;border-radius:9px;padding:8px 10px;background:#fff;color:#52635c;font:600 11px system-ui,sans-serif;cursor:pointer}
 .panel-toggle:hover{background:#f5f8f6}
