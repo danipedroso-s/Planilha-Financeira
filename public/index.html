@@ -74,6 +74,15 @@
             <p class="payday-note">Os valores usam o que foi planejado na planilha. “Já entrou” e “Já saiu” consideram os lançamentos marcados como recebidos ou pagos.</p>
             <p id="paydayUnassigned" class="payday-unassigned" hidden></p>
           </section>
+          <section class="panel transactions-panel">
+            <div class="panel-heading transaction-heading"><div><p class="eyebrow">LANÇAMENTOS</p><h2 id="transactionsTitle">Movimentações do período</h2></div><div class="transaction-heading-actions"><span id="rowCount" class="row-count"></span><button id="transactionsToggle" class="panel-toggle" type="button" aria-expanded="true" aria-controls="transactionsContent"><span id="transactionsToggleLabel">Ocultar</span><span id="transactionsToggleIcon" aria-hidden="true">⌃</span></button></div></div>
+            <div id="transactionsContent">
+              <div class="table-scroll">
+                <table><thead><tr><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="description">Descrição <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="category">Categoria <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="nature">Tipo <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="ascending"><button class="table-sort" type="button" data-sort-key="dueDate">Vencimento <span aria-hidden="true">↑</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="status">Situação <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none" class="amount-cell"><button class="table-sort" type="button" data-sort-key="plannedValue">Valor <span aria-hidden="true">↕</span></button></th></tr></thead><tbody id="transactions"></tbody></table>
+              </div>
+              <p id="emptyState" class="empty-state" hidden>Nenhum lançamento encontrado para este período.</p>
+            </div>
+          </section>
           <section class="chart-grid">
             <article class="panel monthly-panel">
               <div class="panel-heading"><div><p class="eyebrow">ANO SELECIONADO</p><h2>Receitas e despesas</h2></div><span class="chart-key"><i class="key-income"></i>Receitas <i class="key-expense"></i>Despesas</span></div>
@@ -85,13 +94,7 @@
               <div id="categoryChart" class="category-list"></div>
             </article>
           </section>
-          <section class="panel transactions-panel">
-            <div class="panel-heading transaction-heading"><div><p class="eyebrow">LANÇAMENTOS</p><h2>Movimentações do período</h2></div><span id="rowCount" class="row-count"></span></div>
-            <div class="table-scroll">
-              <table><thead><tr><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="description">Descrição <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="category">Categoria <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="nature">Tipo <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="ascending"><button class="table-sort" type="button" data-sort-key="dueDate">Vencimento <span aria-hidden="true">↑</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="status">Situação <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none" class="amount-cell"><button class="table-sort" type="button" data-sort-key="plannedValue">Valor <span aria-hidden="true">↕</span></button></th></tr></thead><tbody id="transactions"></tbody></table>
-            </div>
-            <p id="emptyState" class="empty-state" hidden>Nenhum lançamento encontrado para este período.</p>
-          </section>
+
           <section class="panel annual-panel" aria-labelledby="annualTitle">
             <div class="panel-heading annual-heading">
               <div><p class="eyebrow">ANO SELECIONADO</p><h2 id="annualTitle">Detalhamento por categoria</h2><p id="annualSubtitle" class="annual-subtitle"></p></div>

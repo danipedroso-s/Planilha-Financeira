@@ -6,3 +6,8 @@
 .income-breakdown strong{display:block;margin:0;color:#35524a;font-size:clamp(10px,1.05vw,13px);letter-spacing:-.02em;white-space:nowrap}
 .income-breakdown-card>small{margin-top:9px}
 @media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.transaction-heading-actions{display:flex;align-items:center;gap:12px}
+.panel-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid #e4eae7;border-radius:9px;padding:8px 10px;background:#fff;color:#52635c;font:600 11px system-ui,sans-serif;cursor:pointer}
+.panel-toggle:hover{background:#f5f8f6}
+.panel-toggle:focus-visible{outline:2px solid #187c68;outline-offset:2px}
+@media(max-width:700px){.transaction-heading-actions{gap:8px}.panel-toggle{padding:7px 8px}}

@@ -326,4 +326,12 @@ for(const button of document.querySelectorAll(".table-sort"))button.addEventList
 });
 window.addEventListener("resize",()=>{if(!byId("dashboard").hidden)renderMonthlyChart()});
 byId("refreshButton").addEventListener("click",()=>loadFinance(true));
+byId("transactionsToggle").addEventListener("click",()=>{
+  const toggle=byId("transactionsToggle"),content=byId("transactionsContent");
+  const expanded=toggle.getAttribute("aria-expanded")==="true";
+  toggle.setAttribute("aria-expanded",String(!expanded));
+  content.hidden=expanded;
+  byId("transactionsToggleLabel").textContent=expanded?"Mostrar":"Ocultar";
+  byId("transactionsToggleIcon").textContent=expanded?"⌄":"⌃";
+});
 loadFinance(false);
