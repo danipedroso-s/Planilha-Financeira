@@ -4,6 +4,7 @@ const integer=new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
 const byId=(id)=>document.getElementById(id);
 let rows=[];
 let selectedYear="";
+let transactionSort={key:"dueDate",direction:"asc"};
 function valueOf(value){return Number.isFinite(Number(value))?Number(value):0}
 function income(row){return row.nature.toLocaleLowerCase("pt-BR")==="renda"}
 function signedValue(row){const amount=Math.abs(valueOf(row.plannedValue));return income(row)?amount:-amount}
@@ -227,7 +228,25 @@ function renderPaydaySummary(items){
   }
 }
 function renderTransactions(items){
-  const body=byId("transactions"),ordered=[...items].sort((a,b)=>(a.dueDate||"9999").localeCompare(b.dueDate||"9999"));
+  const body=byId("transactions");
+  const collator=new Intl.Collator("pt-BR",{sensitivity:"base",numeric:true});
+  const getSortValue=(row)=>{
+    if(transactionSort.key==="plannedValue")return Math.abs(valueOf(row.plannedValue));
+    return String(row[transactionSort.key]??"").trim();
+  };
+  const ordered=items.map((row,index)=>({row,index})).sort((a,b)=>{
+    const left=getSortValue(a.row),right=getSortValue(b.row);
+    const leftEmpty=left==="",rightEmpty=right==="";
+    if(leftEmpty||rightEmpty)return leftEmpty===rightEmpty?a.index-b.index:(leftEmpty?1:-1);
+    const comparison=transactionSort.key==="plannedValue"?left-right:collator.compare(left,right);
+    return (transactionSort.direction==="asc"?comparison:-comparison)||a.index-b.index;
+  }).map((item)=>item.row);
+  for(const button of document.querySelectorAll(".table-sort")){
+    const active=button.dataset.sortKey===transactionSort.key;
+    const heading=button.closest("th");
+    heading.setAttribute("aria-sort",active?(transactionSort.direction==="asc"?"ascending":"descending"):"none");
+    button.querySelector("span").textContent=active?(transactionSort.direction==="asc"?"↑":"↓"):"↕";
+  }
   body.replaceChildren();
   byId("rowCount").textContent=integer.format(ordered.length)+(ordered.length===1?" lançamento":" lançamentos");
   byId("emptyState").hidden=ordered.length!==0;
@@ -282,6 +301,13 @@ async function loadFinance(forceRefresh=false){
 }
 byId("yearFilter").addEventListener("change",(event)=>{selectedYear=event.target.value;setOptions(byId("monthFilter"),["Todos",...MONTHS],preferredMonth(selectedYear));render()});
 byId("monthFilter").addEventListener("change",render);
+for(const button of document.querySelectorAll(".table-sort"))button.addEventListener("click",()=>{
+  const key=button.dataset.sortKey;
+  transactionSort=key===transactionSort.key
+    ?{key,direction:transactionSort.direction==="asc"?"desc":"asc"}
+    :{key,direction:"asc"};
+  renderTransactions(selectedRows());
+});
 window.addEventListener("resize",()=>{if(!byId("dashboard").hidden)renderMonthlyChart()});
 byId("refreshButton").addEventListener("click",()=>loadFinance(true));
 loadFinance(false);
