@@ -37,25 +37,6 @@ function dueDay(row){
   const match=String(row.dueDate||"").match(/^\d{4}-\d{2}-(\d{2})$/);
   return match?Number(match[1]):0;
 }
-function incomeBudgetPeriod(row){
-  const date=String(row.dueDate||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  let year=date?Number(date[1]):Number(row.year),month=date?Number(date[2])-1:MONTHS.indexOf(String(row.month||"")),day=date?Number(date[3]):0;
-  if(month<0||month>11)return{year:year,month:"",half:"missing"};
-  const assigned=String(row.paycheckDay||"").trim();
-  let half="";
-  if(assigned==="Dia 01"){
-    half="first";
-    if(day>=15){month++;if(month>11){month=0;year++}}
-  }else if(assigned==="Dia 15")half="second";
-  else if(day>=1&&day<=14)half="first";
-  else if(day>=15&&day<=31)half="second";
-  else half="missing";
-  return{year:year,month:MONTHS[month],half:half};
-}
-function selectedIncomeRows(){
-  const month=byId("monthFilter").value,year=Number(selectedYear);
-  return rows.filter((row)=>income(row)).filter((row)=>{const target=incomeBudgetPeriod(row);return target.year===year&&(month==="Todos"||target.month===month)});
-}
 function datePeriod(items){
   const first=[],second=[],missing=[];
   for(const row of items){const day=dueDay(row);if(day>=1&&day<=14)first.push(row);else if(day>=15&&day<=31)second.push(row);else missing.push(row)}
@@ -84,7 +65,7 @@ function preferredMonth(year){
   return available.has(current)?current:[...MONTHS].reverse().find((month)=>available.has(month))||"Todos";
 }
 function renderSummary(items){
-  const incomes=selectedIncomeRows(),expenses=items.filter((row)=>!income(row)),summaryItems=[...incomes,...expenses],result=totals(summaryItems);
+  const incomes=items.filter(income),expenses=items.filter((row)=>!income(row)),result=totals(items);
   const incomeByGroup={salary:0,rent:0,other:0};
   for(const row of incomes){const group=incomeGroup(row);if(group)incomeByGroup[group]+=Math.abs(valueOf(row.plannedValue))}
   byId("salaryTotal").textContent=currency.format(incomeByGroup.salary);
@@ -96,8 +77,8 @@ function renderSummary(items){
   const balanceTotal=byId("balanceTotal");
   balanceTotal.textContent=currency.format(result.balance);
   balanceTotal.classList.toggle("is-negative",result.balance<0);
-  const periods=datePeriod(expenses),firstExpenses=periods.first,secondExpenses=periods.second;
-  const incomeTargets=incomes.map((row)=>({row:row,target:incomeBudgetPeriod(row)})),firstIncomes=incomeTargets.filter((entry)=>entry.target.half==="first").map((entry)=>entry.row),secondIncomes=incomeTargets.filter((entry)=>entry.target.half==="second").map((entry)=>entry.row),missingIncomes=incomeTargets.filter((entry)=>entry.target.half==="missing").map((entry)=>entry.row);
+  const periods=datePeriod(items),firstExpenses=periods.first.filter((row)=>!income(row)),secondExpenses=periods.second.filter((row)=>!income(row));
+  const firstIncomes=periods.first.filter(income),secondIncomes=periods.second.filter(income),missingIncomes=periods.missing.filter(income);
   byId("incomeReceivedFirst").textContent=currency.format(sumPlanned(firstIncomes.filter(isSettled)));
   byId("incomeForecastFirst").textContent=currency.format(sumPlanned(firstIncomes.filter((row)=>!isSettled(row))));
   byId("incomeReceivedSecond").textContent=currency.format(sumPlanned(secondIncomes.filter(isSettled)));
@@ -105,14 +86,13 @@ function renderSummary(items){
   updateIncomeSplitNote(missingIncomes);
   byId("expenseFirstHalf").textContent=currency.format(sumPlanned(firstExpenses));
   byId("expenseSecondHalf").textContent=currency.format(sumPlanned(secondExpenses));
-  const firstBalance=totals([...firstExpenses,...firstIncomes]).balance,secondBalance=totals([...secondExpenses,...secondIncomes]).balance;
+  const firstBalance=totals(periods.first).balance,secondBalance=totals(periods.second).balance;
   const firstBalanceValue=byId("balanceFirstHalf"),secondBalanceValue=byId("balanceSecondHalf");
   firstBalanceValue.textContent=currency.format(firstBalance);firstBalanceValue.classList.toggle("is-negative",firstBalance<0);
   secondBalanceValue.textContent=currency.format(secondBalance);secondBalanceValue.classList.toggle("is-negative",secondBalance<0);
   const missingExpenses=periods.missing.filter((row)=>!income(row));
   updateSplitNote("expenseSplitNote",missingExpenses,sumPlanned(missingExpenses));
-  const missingItems=[...periods.missing,...missingIncomes];
-  updateSplitNote("balanceSplitNote",missingItems,totals(missingItems).balance);
+  updateSplitNote("balanceSplitNote",periods.missing,totals(periods.missing).balance);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
   byId("expenseHint").textContent=period;
@@ -126,7 +106,7 @@ function renderMonthlyChart(){
   const chart=byId("monthlyChart");
   const width=Math.max(520,Math.round(chart.parentElement.clientWidth||720));
   const height=245,left=42,right=10,top=13,bottom=29,plotWidth=width-left-right,plotHeight=height-top-bottom;
-  const data=MONTHS.map((month)=>{const result=totals(rows.filter((row)=>row.year===Number(selectedYear)&&row.month===month&&!income(row))),incomeValue=sumPlanned(rows.filter((row)=>income(row)).filter((row)=>{const target=incomeBudgetPeriod(row);return target.year===Number(selectedYear)&&target.month===month}));return{month:month,income:incomeValue,expense:result.expense}});
+  const data=MONTHS.map((month)=>{const result=totals(rows.filter((row)=>row.year===Number(selectedYear)&&row.month===month));return{month:month,income:result.income,expense:result.expense}});
   const max=Math.max(1,...data.map((item)=>Math.max(item.income,item.expense)));
   const groupWidth=plotWidth/12,barWidth=Math.min(15,groupWidth*.29);
   chart.setAttribute("viewBox","0 0 "+width+" "+height);
@@ -286,7 +266,7 @@ function renderPaydaySummary(items){
   const month=byId("monthFilter").value;
   byId("paydayPeriod").textContent=month==="Todos"?"Ano completo · selecione um mês para ver cada quinzena":month+" de "+selectedYear;
   const validDays=new Set(["Dia 15","Dia 01"]);
-  const budgetItems=[...items.filter((row)=>!income(row)),...selectedIncomeRows()];
+  const budgetItems=items;
   const unassigned=budgetItems.filter((row)=>!validDays.has(String(row.paycheckDay||"").trim()));
   const warning=byId("paydayUnassigned");
   warning.hidden=unassigned.length===0;
