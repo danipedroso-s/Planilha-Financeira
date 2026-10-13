@@ -114,6 +114,10 @@
           <section class="panel transactions-panel">
             <div class="panel-heading transaction-heading"><div><p class="eyebrow">LANÇAMENTOS</p><h2 id="transactionsTitle">Movimentações do período</h2></div><div class="transaction-heading-actions"><span id="rowCount" class="row-count"></span><button id="transactionsToggle" class="panel-toggle" type="button" aria-expanded="true" aria-controls="transactionsContent"><span id="transactionsToggleLabel">Ocultar</span><span id="transactionsToggleIcon" aria-hidden="true">⌃</span></button></div></div>
             <div id="transactionsContent">
+              <div class="situation-filter" aria-label="Filtrar movimentações por situação">
+                <div class="situation-filter-heading"><strong>Situação</strong><span>Selecione uma ou mais para filtrar</span><button id="clearSituationFilters" type="button" hidden>Limpar seleção</button></div>
+                <div id="situationFilterCards" class="situation-filter-cards" role="group" aria-label="Situações disponíveis"></div>
+              </div>
               <div class="table-scroll">
                 <table><thead><tr><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="description">Descrição <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="category">Categoria <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="nature">Tipo <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="ascending"><button class="table-sort" type="button" data-sort-key="dueDate">Vencimento <span aria-hidden="true">↑</span></button></th><th scope="col" aria-sort="none"><button class="table-sort" type="button" data-sort-key="status">Situação <span aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none" class="amount-cell"><button class="table-sort" type="button" data-sort-key="plannedValue">Valor <span aria-hidden="true">↕</span></button></th></tr></thead><tbody id="transactions"></tbody></table>
               </div>

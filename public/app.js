@@ -5,6 +5,7 @@ const byId=(id)=>document.getElementById(id);
 let rows=[];
 let selectedYear="";
 let transactionSort={key:"dueDate",direction:"asc"};
+let selectedStatuses=new Set();
 function valueOf(value){return Number.isFinite(Number(value))?Number(value):0}
 function income(row){return row.nature.toLocaleLowerCase("pt-BR")==="renda"}
 function incomeGroup(row){
@@ -251,6 +252,20 @@ function paydayItemState(row,incomeRow){
   return{className:settled?"status-paid":(statusClass(String(row.status||""))||"status-pending"),note:""};
 }
 function sumPlanned(items){return items.reduce((sum,row)=>sum+Math.abs(valueOf(row.plannedValue)),0)}
+function situationKey(row){return String(row.status||"").trim().toLocaleLowerCase("pt-BR")||"sem situação"}
+function renderSituationFilters(items){
+  const container=byId("situationFilterCards"),clear=byId("clearSituationFilters"),collator=new Intl.Collator("pt-BR",{sensitivity:"base"}),labels=new Map(),counts=new Map();
+  for(const row of rows){const key=situationKey(row);if(!labels.has(key))labels.set(key,String(row.status||"").trim()||"Sem situação")}
+  for(const row of items){const key=situationKey(row);counts.set(key,(counts.get(key)||0)+1)}
+  container.replaceChildren();
+  for(const [key,label] of [...labels.entries()].sort((a,b)=>collator.compare(a[1],b[1]))){
+    const button=document.createElement("button");button.type="button";button.className="situation-filter-card";button.setAttribute("aria-pressed",String(selectedStatuses.has(key)));
+    const name=document.createElement("span");name.textContent=label;
+    const count=document.createElement("small"),total=counts.get(key)||0;count.textContent=integer.format(total)+(total===1?" lançamento":" lançamentos");
+    button.append(name,count);button.addEventListener("click",()=>{if(selectedStatuses.has(key))selectedStatuses.delete(key);else selectedStatuses.add(key);renderTransactions(selectedRows())});container.append(button);
+  }
+  clear.hidden=selectedStatuses.size===0;
+}
 function progressText(done,total,incomeSide){
   const remaining=Math.max(0,total-done);
   const completedLabel=incomeSide?"Já entrou: ":"Já saiu: ";
@@ -309,12 +324,14 @@ function renderPaydaySummary(items){
 }
 function renderTransactions(items){
   const body=byId("transactions");
+  renderSituationFilters(items);
+  const visibleItems=selectedStatuses.size?items.filter((row)=>selectedStatuses.has(situationKey(row))):items;
   const collator=new Intl.Collator("pt-BR",{sensitivity:"base",numeric:true});
   const getSortValue=(row)=>{
     if(transactionSort.key==="plannedValue")return Math.abs(valueOf(row.plannedValue));
     return String(row[transactionSort.key]??"").trim();
   };
-  const ordered=items.map((row,index)=>({row,index})).sort((a,b)=>{
+  const ordered=visibleItems.map((row,index)=>({row,index})).sort((a,b)=>{
     const left=getSortValue(a.row),right=getSortValue(b.row);
     const leftEmpty=left==="",rightEmpty=right==="";
     if(leftEmpty||rightEmpty)return leftEmpty===rightEmpty?a.index-b.index:(leftEmpty?1:-1);
@@ -329,6 +346,7 @@ function renderTransactions(items){
   }
   body.replaceChildren();
   byId("rowCount").textContent=integer.format(ordered.length)+(ordered.length===1?" lançamento":" lançamentos");
+  byId("emptyState").textContent=selectedStatuses.size?"Nenhum lançamento com essas situações neste período.":"Nenhum lançamento encontrado para este período.";
   byId("emptyState").hidden=ordered.length!==0;
   body.closest(".table-scroll").hidden=ordered.length===0;
   for(const row of ordered.slice(0,100)){
@@ -383,6 +401,7 @@ async function loadFinance(forceRefresh=false){
 }
 byId("yearFilter").addEventListener("change",(event)=>{selectedYear=event.target.value;setOptions(byId("monthFilter"),["Todos",...MONTHS],preferredMonth(selectedYear));render()});
 byId("monthFilter").addEventListener("change",render);
+byId("clearSituationFilters").addEventListener("click",()=>{selectedStatuses.clear();renderTransactions(selectedRows())});
 for(const button of document.querySelectorAll(".table-sort"))button.addEventListener("click",()=>{
   const key=button.dataset.sortKey;
   transactionSort=key===transactionSort.key
