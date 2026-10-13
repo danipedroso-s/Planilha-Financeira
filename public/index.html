@@ -7,6 +7,7 @@
     <meta name="description" content="Dashboard financeiro privado com visão mensal de receitas e despesas.">
     <title>Visão financeira</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/income-breakdown.css">
     <script src="/app.js" defer></script>
   </head>
   <body>
@@ -28,10 +29,16 @@
         <section id="error" class="notice notice-error" hidden role="alert"></section>
         <div id="dashboard" hidden>
           <section class="kpi-grid" aria-label="Resumo do período">
-            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Salários previstos</span><span class="kpi-dot">↗</span></div><strong id="salaryTotal">—</strong><small id="salaryHint">No período selecionado</small></article>
-            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Aluguéis previstos</span><span class="kpi-dot">⌂</span></div><strong id="rentTotal">—</strong><small id="rentHint">No período selecionado</small></article>
-            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Outras rendas previstas</span><span class="kpi-dot">＋</span></div><strong id="otherIncomeTotal">—</strong><small id="otherIncomeHint">No período selecionado</small></article>
-            <article class="kpi-card kpi-income kpi-income-total"><div class="kpi-heading"><span>Total de receitas</span><span class="kpi-dot">Σ</span></div><strong id="incomeTotal">—</strong><small id="incomeHint">No período selecionado</small></article>
+            <article class="kpi-card kpi-income kpi-income-total kpi-income-breakdown-card">
+              <div class="kpi-heading"><span>Total de receitas</span><span class="kpi-dot">Σ</span></div>
+              <strong id="incomeTotal">—</strong>
+              <div class="income-breakdown" aria-label="Receitas separadas por origem">
+                <div><span>Salário</span><strong id="salaryTotal">—</strong></div>
+                <div><span>Aluguel</span><strong id="rentTotal">—</strong></div>
+                <div><span>Outras</span><strong id="otherIncomeTotal">—</strong></div>
+              </div>
+              <small id="incomeHint">No período selecionado</small>
+            </article>
             <article class="kpi-card kpi-expense"><div class="kpi-heading"><span>Despesas previstas</span><span class="kpi-dot">↘</span></div><strong id="expenseTotal">—</strong><small id="expenseHint">No período selecionado</small></article>
             <article class="kpi-card kpi-balance"><div class="kpi-heading"><span>Saldo previsto</span><span class="kpi-dot">=</span></div><strong id="balanceTotal">—</strong><small>Receitas menos despesas</small></article>
           </section>

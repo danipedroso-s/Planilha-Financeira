@@ -51,9 +51,6 @@ function renderSummary(items){
   byId("balanceTotal").textContent=currency.format(result.balance);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
-  byId("salaryHint").textContent=period;
-  byId("rentHint").textContent=period;
-  byId("otherIncomeHint").textContent=period;
   byId("expenseHint").textContent=period;
 }
 function svg(name,attrs){
