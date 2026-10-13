@@ -268,8 +268,9 @@ function renderSituationFilters(items){
 }
 function progressText(done,total,incomeSide){
   const remaining=Math.max(0,total-done);
-  const completedLabel=incomeSide?"Já entrou: ":"Já saiu: ";
-  const remainingLabel=incomeSide?"Falta entrar: ":"Falta pagar: ";
+  if(incomeSide)return"Previsto: "+currency.format(total)+(remaining>0?" · Falta entrar: "+currency.format(remaining):" · Tudo recebido");
+  const completedLabel="Já saiu: ";
+  const remainingLabel="Falta pagar: ";
   return completedLabel+currency.format(done)+(remaining>0?" · "+remainingLabel+currency.format(remaining):"");
 }
 function appendPaydayItem(list,row,incomeRow){
@@ -296,7 +297,7 @@ function renderPaydaySummary(items){
     const incomes=assigned.filter(income),expenses=assigned.filter((row)=>!income(row));
     const incomeTotal=sumPlanned(incomes),expenseTotal=sumPlanned(expenses);
     const received=sumPlanned(incomes.filter(isSettled)),paid=sumPlanned(expenses.filter(isSettled));
-    card.querySelector(".payday-income-total").textContent=currency.format(incomeTotal);
+    card.querySelector(".payday-income-total").textContent=currency.format(received);
     card.querySelector(".payday-expense-total").textContent=currency.format(expenseTotal);
     card.querySelector(".payday-income-progress").textContent=progressText(received,incomeTotal,true);
     card.querySelector(".payday-expense-progress").textContent=progressText(paid,expenseTotal,false);
