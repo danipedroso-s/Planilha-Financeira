@@ -86,7 +86,13 @@ async function financeRows(forceRefresh) {
     signal: AbortSignal.timeout(12_000),
   });
   if (!response.ok) {
-    console.error(`[finance-api] Google Sheets read failed (${response.status})`);
+        let reason = "unknown";
+    try {
+      const errorBody = await response.json();
+      const candidate = errorBody.error?.errors?.[0]?.reason || errorBody.error?.status || "unknown";
+      reason = String(candidate).replace(/[^a-z0-9_ -]/gi, "").slice(0, 80);
+    } catch {}
+    console.error(`[finance-api] Google Sheets read failed (${response.status}): ${reason}`);
     throw new Error("Google Sheets read failed");
   }
   const result = await response.json();
