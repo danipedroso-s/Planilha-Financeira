@@ -7,6 +7,13 @@ let selectedYear="";
 let transactionSort={key:"dueDate",direction:"asc"};
 function valueOf(value){return Number.isFinite(Number(value))?Number(value):0}
 function income(row){return row.nature.toLocaleLowerCase("pt-BR")==="renda"}
+function incomeGroup(row){
+  if(!income(row))return"";
+  const label=(String(row.description||"")+" "+String(row.category||"")).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR");
+  if(/\b(salario|ordenado|remuneracao)\b|\bpro[ -]?labore\b/.test(label))return"salary";
+  if(/\b(aluguel|alugueis|locacao|locacoes)\b/.test(label))return"rent";
+  return"other";
+}
 function signedValue(row){const amount=Math.abs(valueOf(row.plannedValue));return income(row)?amount:-amount}
 function isSettled(row){return Boolean(row.paidDate)||/\b(paga|pago|recebida|recebido)\b/.test(String(row.status||"").toLocaleLowerCase("pt-BR"))}
 function totals(items){
@@ -29,12 +36,20 @@ function preferredMonth(year){
 }
 function renderSummary(items){
   const result=totals(items);
+  const incomeByGroup={salary:0,rent:0,other:0};
+  for(const row of items){const group=incomeGroup(row);if(group)incomeByGroup[group]+=Math.abs(valueOf(row.plannedValue))}
+  byId("salaryTotal").textContent=currency.format(incomeByGroup.salary);
+  byId("rentTotal").textContent=currency.format(incomeByGroup.rent);
+  byId("otherIncomeTotal").textContent=currency.format(incomeByGroup.other);
   byId("incomeTotal").textContent=currency.format(result.income);
   byId("expenseTotal").textContent=currency.format(result.expense);
   byId("balanceTotal").textContent=currency.format(result.balance);
   byId("realizedTotal").textContent=currency.format(result.realized);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
+  byId("salaryHint").textContent=period;
+  byId("rentHint").textContent=period;
+  byId("otherIncomeHint").textContent=period;
   byId("expenseHint").textContent=period;
 }
 function svg(name,attrs){

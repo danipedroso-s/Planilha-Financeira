@@ -28,11 +28,15 @@
         <section id="error" class="notice notice-error" hidden role="alert"></section>
         <div id="dashboard" hidden>
           <section class="kpi-grid" aria-label="Resumo do período">
-            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Receitas previstas</span><span class="kpi-dot">↗</span></div><strong id="incomeTotal">—</strong><small id="incomeHint">No período selecionado</small></article>
+            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Salários previstos</span><span class="kpi-dot">↗</span></div><strong id="salaryTotal">—</strong><small id="salaryHint">No período selecionado</small></article>
+            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Aluguéis previstos</span><span class="kpi-dot">⌂</span></div><strong id="rentTotal">—</strong><small id="rentHint">No período selecionado</small></article>
+            <article class="kpi-card kpi-income"><div class="kpi-heading"><span>Outras rendas previstas</span><span class="kpi-dot">＋</span></div><strong id="otherIncomeTotal">—</strong><small id="otherIncomeHint">No período selecionado</small></article>
+            <article class="kpi-card kpi-income kpi-income-total"><div class="kpi-heading"><span>Total de receitas</span><span class="kpi-dot">Σ</span></div><strong id="incomeTotal">—</strong><small id="incomeHint">No período selecionado</small></article>
             <article class="kpi-card kpi-expense"><div class="kpi-heading"><span>Despesas previstas</span><span class="kpi-dot">↘</span></div><strong id="expenseTotal">—</strong><small id="expenseHint">No período selecionado</small></article>
             <article class="kpi-card kpi-balance"><div class="kpi-heading"><span>Saldo previsto</span><span class="kpi-dot">=</span></div><strong id="balanceTotal">—</strong><small>Receitas menos despesas</small></article>
             <article class="kpi-card kpi-realized"><div class="kpi-heading"><span>Realizado líquido</span><span class="kpi-dot">✓</span></div><strong id="realizedTotal">—</strong><small>Estimado pelo valor planejado dos itens pagos/recebidos</small></article>
           </section>
+          <p class="income-breakdown-note">Salários e aluguéis são reconhecidos pelo nome ou categoria do lançamento. As demais rendas entram em “Outras rendas”.</p>
           <section class="payday-section" aria-labelledby="paydayTitle">
             <div class="panel-heading payday-section-heading"><div><p class="eyebrow">ENTRADAS E CONTAS</p><h2 id="paydayTitle">Seu dinheiro por quinzena</h2><p class="payday-intro">Veja o que entra, o que sai e quanto sobra com cada salário.</p></div><span id="paydayPeriod" class="row-count"></span></div>
             <div class="payday-grid">

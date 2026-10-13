@@ -15,3 +15,4 @@
 .payday-lists ul{gap:0}.payday-item{padding:8px 3px;border:0;border-bottom:1px solid #edf0ee;border-radius:0;background:transparent}.payday-item:last-child{border-bottom:0}
 .payday-item-info>.payday-item-note{color:#bd3d3a;font-size:9px;line-height:1.35}
 .table-sort{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}.table-sort span{min-width:8px;color:#53756b;font-size:11px}.table-sort:hover{color:#263a35}.table-sort:focus-visible{outline:2px solid #2f8069;outline-offset:3px;border-radius:2px}th.amount-cell .table-sort{justify-content:flex-end;width:100%;text-align:right}
+.income-breakdown-note{margin:-5px 0 17px;color:#899590;font-size:10px}
