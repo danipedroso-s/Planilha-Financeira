@@ -33,7 +33,15 @@ async function accessToken() {
     body,
     signal: AbortSignal.timeout(12_000),
   });
-  if (!response.ok) throw new Error("OAuth token refresh failed");
+  if (!response.ok) {
+    let oauthError = "unknown";
+    try {
+      const errorBody = await response.json();
+      oauthError = String(errorBody.error || oauthError).replace(/[^a-z0-9_ -]/gi, "").slice(0, 80);
+    } catch {}
+    console.error(`[finance-api] OAuth refresh failed (${response.status}): ${oauthError}`);
+    throw new Error("OAuth token refresh failed");
+  }
   const result = await response.json();
   if (!result.access_token) throw new Error("OAuth response did not contain an access token");
   tokenCache = { value: result.access_token, expiry: Date.now() + Number(result.expires_in || 3600) * 1000 };
@@ -77,7 +85,10 @@ async function financeRows(forceRefresh) {
     headers: { Authorization: "Bearer " + token },
     signal: AbortSignal.timeout(12_000),
   });
-  if (!response.ok) throw new Error("Google Sheets read failed");
+  if (!response.ok) {
+    console.error(`[finance-api] Google Sheets read failed (${response.status})`);
+    throw new Error("Google Sheets read failed");
+  }
   const result = await response.json();
   const rows = parseRows(result.values || []);
   dataCache = { rows, expiry: Date.now() + CACHE_MS, updatedAt: new Date().toISOString() };
