@@ -9,7 +9,12 @@ function valueOf(value){return Number.isFinite(Number(value))?Number(value):0}
 function income(row){return row.nature.toLocaleLowerCase("pt-BR")==="renda"}
 function incomeGroup(row){
   if(!income(row))return"";
-  const label=(String(row.description||"")+" "+String(row.category||"")).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR");
+  const normalize=(value)=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR").trim();
+  const source=normalize(row.incomeSource);
+  if(/\b(salario|ordenado|remuneracao)\b|\bpro[ -]?labore\b/.test(source))return"salary";
+  if(/\b(aluguel|alugueis|locacao|locacoes)\b/.test(source))return"rent";
+  if(/\b(outros?|outras?)\b/.test(source))return"other";
+  const label=normalize(String(row.description||"")+" "+String(row.category||""));
   if(/\b(salario|ordenado|remuneracao)\b|\bpro[ -]?labore\b/.test(label))return"salary";
   if(/\b(aluguel|alugueis|locacao|locacoes)\b/.test(label))return"rent";
   return"other";
