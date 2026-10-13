@@ -355,9 +355,10 @@ function renderTransactions(items){
     const category=document.createElement("td");category.textContent=row.category||"—";
     const nature=document.createElement("td");const tag=document.createElement("span");tag.className="nature";tag.textContent=row.nature;nature.append(tag);
     const due=document.createElement("td");due.textContent=dateLabel(row.dueDate);
+    const paid=document.createElement("td");paid.textContent=row.paidDate?dateLabel(row.paidDate):"—";
     const status=document.createElement("td");const statusTag=document.createElement("span");statusTag.className=("status "+statusClass(row.status)).trim();statusTag.textContent=row.status||"Sem situação";status.append(statusTag);
     const amount=document.createElement("td");amount.className="amount-cell "+(income(row)?"amount-income":"amount-expense");amount.textContent=currency.format(Math.abs(valueOf(row.plannedValue)));
-    tr.append(description,category,nature,due,status,amount);body.append(tr);
+    tr.append(description,category,nature,due,paid,status,amount);body.append(tr);
   }
 }
 function render(){
