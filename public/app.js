@@ -27,6 +27,20 @@ function totals(items){
   result.balance=items.reduce((sum,row)=>sum+signedValue(row),0);
   return result;
 }
+function dueDay(row){
+  const match=String(row.dueDate||"").match(/^\d{4}-\d{2}-(\d{2})$/);
+  return match?Number(match[1]):0;
+}
+function datePeriod(items){
+  const first=[],second=[],missing=[];
+  for(const row of items){const day=dueDay(row);if(day>=1&&day<=14)first.push(row);else if(day>=15&&day<=31)second.push(row);else missing.push(row)}
+  return{first,second,missing};
+}
+function updateSplitNote(id,missing){
+  const note=byId(id);
+  note.hidden=missing.length===0;
+  note.textContent=missing.length?integer.format(missing.length)+(missing.length===1?" lançamento sem vencimento, incluído apenas no total.":" lançamentos sem vencimento, incluídos apenas no total."):"";
+}
 function selectedRows(){
   const month=byId("monthFilter").value;
   return rows.filter((row)=>row.year===Number(selectedYear)&&(month==="Todos"||row.month===month));
@@ -48,7 +62,18 @@ function renderSummary(items){
   byId("otherIncomeTotal").textContent=currency.format(incomeByGroup.other);
   byId("incomeTotal").textContent=currency.format(result.income);
   byId("expenseTotal").textContent=currency.format(result.expense);
-  byId("balanceTotal").textContent=currency.format(result.balance);
+  const balanceTotal=byId("balanceTotal");
+  balanceTotal.textContent=currency.format(result.balance);
+  balanceTotal.classList.toggle("is-negative",result.balance<0);
+  const periods=datePeriod(items),firstExpenses=periods.first.filter((row)=>!income(row)),secondExpenses=periods.second.filter((row)=>!income(row));
+  byId("expenseFirstHalf").textContent=currency.format(sumPlanned(firstExpenses));
+  byId("expenseSecondHalf").textContent=currency.format(sumPlanned(secondExpenses));
+  const firstBalance=totals(periods.first).balance,secondBalance=totals(periods.second).balance;
+  const firstBalanceValue=byId("balanceFirstHalf"),secondBalanceValue=byId("balanceSecondHalf");
+  firstBalanceValue.textContent=currency.format(firstBalance);firstBalanceValue.classList.toggle("is-negative",firstBalance<0);
+  secondBalanceValue.textContent=currency.format(secondBalance);secondBalanceValue.classList.toggle("is-negative",secondBalance<0);
+  updateSplitNote("expenseSplitNote",periods.missing.filter((row)=>!income(row)));
+  updateSplitNote("balanceSplitNote",periods.missing);
   const period=byId("monthFilter").value==="Todos"?"Ano de "+selectedYear:byId("monthFilter").value+" de "+selectedYear;
   byId("incomeHint").textContent=period;
   byId("expenseHint").textContent=period;

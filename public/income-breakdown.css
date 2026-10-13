@@ -11,3 +11,12 @@
 .panel-toggle:hover{background:#f5f8f6}
 .panel-toggle:focus-visible{outline:2px solid #187c68;outline-offset:2px}
 @media(max-width:700px){.transaction-heading-actions{gap:8px}.panel-toggle{padding:7px 8px}}
+.kpi-split-card{min-height:170px}
+.kpi-split-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid #edf0ee}
+.kpi-split-breakdown div{display:grid;gap:4px;min-width:0}
+.kpi-split-breakdown span{color:#899590;font-size:10px}
+.kpi-split-breakdown strong{display:block;margin:0;color:#35524a;font-size:clamp(10px,1.05vw,13px);letter-spacing:-.02em;white-space:nowrap}
+.kpi-expense .kpi-split-breakdown strong{color:#96574d}
+.kpi-balance .kpi-split-breakdown strong{color:var(--green)}
+.kpi-balance .kpi-split-breakdown strong.is-negative,.kpi-balance>strong.is-negative{color:#bd3d3a}
+.kpi-split-note{color:#899590;font-size:9px!important}

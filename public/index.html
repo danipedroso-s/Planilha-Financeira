@@ -39,8 +39,26 @@
               </div>
               <small id="incomeHint">No período selecionado</small>
             </article>
-            <article class="kpi-card kpi-expense"><div class="kpi-heading"><span>Despesas previstas</span><span class="kpi-dot">↘</span></div><strong id="expenseTotal">—</strong><small id="expenseHint">No período selecionado</small></article>
-            <article class="kpi-card kpi-balance"><div class="kpi-heading"><span>Saldo previsto</span><span class="kpi-dot">=</span></div><strong id="balanceTotal">—</strong><small>Receitas menos despesas</small></article>
+            <article class="kpi-card kpi-expense kpi-split-card">
+              <div class="kpi-heading"><span>Despesas previstas</span><span class="kpi-dot">↘</span></div>
+              <strong id="expenseTotal">—</strong>
+              <div class="kpi-split-breakdown" aria-label="Despesas separadas por período do mês">
+                <div><span>Dias 1–14</span><strong id="expenseFirstHalf">—</strong></div>
+                <div><span>Dias 15–31</span><strong id="expenseSecondHalf">—</strong></div>
+              </div>
+              <small id="expenseHint">No período selecionado</small>
+              <small id="expenseSplitNote" class="kpi-split-note" hidden></small>
+            </article>
+            <article class="kpi-card kpi-balance kpi-split-card">
+              <div class="kpi-heading"><span>Saldo previsto</span><span class="kpi-dot">=</span></div>
+              <strong id="balanceTotal">—</strong>
+              <div class="kpi-split-breakdown" aria-label="Saldo separado por período do mês">
+                <div><span>Dias 1–14</span><strong id="balanceFirstHalf">—</strong></div>
+                <div><span>Dias 15–31</span><strong id="balanceSecondHalf">—</strong></div>
+              </div>
+              <small>Receitas menos despesas</small>
+              <small id="balanceSplitNote" class="kpi-split-note" hidden></small>
+            </article>
           </section>
           <p class="income-breakdown-note">A separação usa “Fonte de renda” na planilha. Se esse campo estiver vazio, considera o nome ou a categoria do lançamento.</p>
           <section class="payday-section" aria-labelledby="paydayTitle">
