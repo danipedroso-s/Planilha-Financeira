@@ -54,7 +54,6 @@
                 </section>
               </div>
               <small id="incomeHint">No período selecionado</small>
-              <small class="income-data-note">Os totais consideram somente lançamentos do mês selecionado. Recebido considera a situação na planilha, pelo valor planejado.</small>
               <small id="incomeSplitNote" class="kpi-split-note" hidden></small>
             </article>
             <article class="kpi-card kpi-expense kpi-split-card">
@@ -66,7 +65,6 @@
               </div>
               <small id="expenseHint">No período selecionado</small>
               <small id="expenseSplitNote" class="kpi-split-note" hidden></small>
-              <div class="expense-overdue-row"><span>Vencidas (não pagas)</span><strong id="expenseOverdueTotal">—</strong></div>
             </article>
             <article class="kpi-card kpi-balance kpi-split-card">
               <div class="kpi-heading"><span>Saldo previsto</span><span class="kpi-dot">=</span></div>
@@ -79,6 +77,10 @@
               <small id="balanceSplitNote" class="kpi-split-note" hidden></small>
             </article>
           </section>
+          <div class="summary-meta-row">
+            <small class="income-data-note">Os totais consideram somente lançamentos do mês selecionado. Recebido considera a situação na planilha, pelo valor planejado.</small>
+            <div class="expense-overdue-row"><span>Vencidas (não pagas)</span><strong id="expenseOverdueTotal">—</strong></div>
+          </div>
           <p class="income-breakdown-note">A separação usa “Fonte de renda” na planilha. Se esse campo estiver vazio, considera o nome ou a categoria do lançamento.</p>
           <section class="payday-section" aria-labelledby="paydayTitle">
             <div class="panel-heading payday-section-heading"><div><p class="eyebrow">ENTRADAS E CONTAS</p><h2 id="paydayTitle">Seu dinheiro por quinzena</h2><p class="payday-intro">Veja o que entra, o que sai e quanto sobra com cada salário.</p></div><span id="paydayPeriod" class="row-count"></span></div>
