@@ -20,12 +20,13 @@
 .panel-toggle:focus-visible{outline:2px solid #187c68;outline-offset:2px}
 @media(max-width:700px){.transaction-heading-actions{gap:8px}.panel-toggle{padding:7px 8px}}
 .kpi-split-card{min-height:170px}
+.kpi-expense{display:flex;flex-direction:column}
 .expense-overdue-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;padding:8px 10px;border-radius:9px;background:#fff3f1}
+.kpi-expense .expense-overdue-row{align-self:center;width:min(100%,300px);margin-top:auto;margin-bottom:auto}
 .expense-overdue-row span{color:#a44d46;font-size:10px;font-weight:600}
 .expense-overdue-row strong{margin:0;color:#bd3d3a;font-size:12px;white-space:nowrap}
-.summary-meta-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:-5px 0 14px}
-.summary-meta-row .income-data-note{flex:1;margin:0}
-.summary-meta-row .expense-overdue-row{flex:0 0 auto;min-width:205px;margin:0}
+.summary-meta-row{margin:-5px 0 14px}
+.summary-meta-row .income-data-note{display:block;margin:0}
 .kpi-split-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid #edf0ee}
 .kpi-split-breakdown div{display:grid;gap:4px;min-width:0}
 .kpi-split-breakdown span{color:#899590;font-size:10px}
@@ -49,4 +50,3 @@
 .situation-filter-card[aria-pressed="true"]{border-color:#258d77;background:#eaf5f0;box-shadow:inset 0 0 0 1px #258d77;color:#17644f}
 .situation-filter-card[aria-pressed="true"] small{color:#4e806f}
 .situation-filter-card:focus-visible,.situation-filter-heading button:focus-visible{outline:2px solid #187c68;outline-offset:2px}
-@media(max-width:700px){.summary-meta-row{align-items:stretch;flex-direction:column;gap:7px}.summary-meta-row .expense-overdue-row{align-self:flex-start;min-width:min(100%,205px)}}
