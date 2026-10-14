@@ -193,12 +193,20 @@ function renderAnnualCategories(){
     for(const month of MONTHS)categoryRow.append(annualValueCell(categoryRows.filter((row)=>row.month===month)));
     categoryRow.append(annualValueCell(categoryRows));body.append(categoryRow);
 
-    const details=[...categoryRows].sort((a,b)=>String(a.dueDate||"").localeCompare(String(b.dueDate||""))||String(a.description||"").localeCompare(String(b.description||""),"pt-BR"));
-    for(const row of details){
+    const detailGroups=new Map();
+    for(const row of categoryRows){
+      const description=String(row.description||"Sem descrição").trim()||"Sem descrição";
+      const key=description.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").toLocaleLowerCase("pt-BR");
+      if(!detailGroups.has(key))detailGroups.set(key,{description:description,rows:[],firstDue:String(row.dueDate||"9999-99-99")});
+      const detail=detailGroups.get(key);detail.rows.push(row);
+      const due=String(row.dueDate||"9999-99-99");if(due<detail.firstDue)detail.firstDue=due;
+    }
+    const details=[...detailGroups.values()].sort((a,b)=>a.firstDue.localeCompare(b.firstDue)||a.description.localeCompare(b.description,"pt-BR"));
+    for(const detail of details){
       const detailRow=document.createElement("tr");detailRow.className="annual-detail-row";detailRow.dataset.parent=groupId;detailRow.hidden=true;
-      const description=document.createElement("th");description.scope="row";description.textContent=String(row.description||"Sem descrição");detailRow.append(description);
-      for(const month of MONTHS)detailRow.append(annualValueCell(row.month===month?[row]:[]));
-      detailRow.append(annualValueCell([row]));body.append(detailRow);
+      const description=document.createElement("th");description.scope="row";description.textContent=detail.description;detailRow.append(description);
+      for(const month of MONTHS)detailRow.append(annualValueCell(detail.rows.filter((row)=>row.month===month)));
+      detailRow.append(annualValueCell(detail.rows));body.append(detailRow);
     }
   }
 }
